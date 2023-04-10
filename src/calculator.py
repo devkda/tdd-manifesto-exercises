@@ -62,6 +62,7 @@ def added(expression: str) -> int:
 
     delimiter, remaining_part = extract_expression_params(expression)
     int_numbers = [] 
+    # error = expression_is_valid(delimiter, remaining_part)
 
     for line in remaining_part.split('\n'):
         try:
@@ -69,7 +70,7 @@ def added(expression: str) -> int:
                 [int(n) for n in line.split(delimiter)]
             )
         except ValueError as err:
-            raise
+            raise err
     return sum(int_numbers)
 
 
@@ -82,3 +83,10 @@ def extract_expression_params(expression: str) -> Tuple[str, str]:
     # we process the remaining part using provided separator
     remaining_part = expression[input_numbers_start_index:]
     return delimiter, remaining_part
+
+
+def expression_is_valid(numbers_with_delimiters: str, delimiter: str) -> bool:
+    separated_numbers = numbers_with_delimiters.split(delimiter)
+    return all(
+        num.isdigit() for num in separated_numbers
+    )
