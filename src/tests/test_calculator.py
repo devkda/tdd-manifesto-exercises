@@ -13,7 +13,7 @@ def test_added_accepts_only_strings():
 
 
 @pytest.mark.parametrize(
-    'input_numbers, expected_result',
+    'expression, expected_result',
     [
         ('//,\n10,10,10', 30),
         ('//,\n50,50', 100),
@@ -25,25 +25,25 @@ def test_added_accepts_only_strings():
         ('//,\n0,10\n10\n10', 30),
     ]
 )
-def test_added_evaluates_the_sum_correctly(input_numbers, expected_result):
-    assert added(input_numbers) == expected_result
+def test_added_evaluates_the_sum_correctly(expression, expected_result):
+    assert added(expression) == expected_result
 
 
 @pytest.mark.parametrize(
-    'input_number',
+    'expression',
     [
         '//,\n1,2\n\n3',
         '//,\n1,2\n3,',
         '//,\n1,2,',
     ]
 )
-def test_added_accepts_only_strings(input_number):
+def test_added_accepts_only_strings(expression):
     with pytest.raises(ValueError):
-        added(input_number)
+        added(expression)
 
 
 @pytest.mark.parametrize(
-    'input, expected_result',
+    'expression, expected_result',
     [
         ('//,\n1,2', 3),
         ('//,\n1,2,3', 6),
@@ -51,12 +51,25 @@ def test_added_accepts_only_strings(input_number):
         ('//sep\n1sep2', 3),
     ]
 )
-def test_added_recognizes_different_delimiters(input, expected_result):
-    assert added(input) == expected_result
+def test_added_recognizes_different_delimiters(expression, expected_result):
+    assert added(expression) == expected_result
 
 
 @pytest.mark.parametrize(
-    'input, expected_result',
+    'expression',
+    [
+        '//;\n1,2\n\n3',
+        '//|\n1,2\n3,',
+        '//sep\n1,2,',
+    ]
+)
+def test_inconsistent_delimiter_raises_value_error(expression):
+    with pytest.raises(ValueError):
+        added(expression)
+
+
+@pytest.mark.parametrize(
+    'expression, expected_result',
     [
         (
             '//,\n1,2', (
@@ -80,5 +93,5 @@ def test_added_recognizes_different_delimiters(input, expected_result):
         ),
     ]
 )
-def test_extractor_recognizes_delimiter_and_input_numbers(input, expected_result):
-    assert extract_expression_params(input) == expected_result
+def test_extractor_recognizes_delimiter_and_input_numbers(expression, expected_result):
+    assert extract_expression_params(expression) == expected_result

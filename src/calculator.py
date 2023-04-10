@@ -62,15 +62,18 @@ def added(expression: str) -> int:
 
     delimiter, remaining_part = extract_expression_params(expression)
     int_numbers = [] 
-    for line in remaining_part.split('\n'):
-        int_numbers.extend(
-            [int(n) for n in line.split(delimiter)]
-        )
 
+    for line in remaining_part.split('\n'):
+        try:
+            int_numbers.extend(
+                [int(n) for n in line.split(delimiter)]
+            )
+        except ValueError as err:
+            raise
     return sum(int_numbers)
 
 
-def extract_expression_params(expression: str) -> Tuple[str, int]:
+def extract_expression_params(expression: str) -> Tuple[str, str]:
     # we extract separator lead by double forward slashes and followed by newline symbol
     delimiter_match = re.match(SEPARATOR_REGEX, expression)
     delimiter = delimiter_match.group(1)
