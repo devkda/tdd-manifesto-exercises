@@ -44,11 +44,6 @@ import re
 from typing import Tuple
 
 
-SEPARATOR_REGEX = re.compile(
-    r'^\/\/(.+)\n'
-)
-
-
 def added(expression: str) -> int:
     """
     """
@@ -73,8 +68,12 @@ def added(expression: str) -> int:
 
 
 def extract_expression_params(expression: str) -> Tuple[str, str]:
+    pattern = re.compile(
+        r'^\/\/(.+)\n'
+    )
+
     # we extract separator lead by double forward slashes and followed by newline symbol
-    delimiter_match = re.match(SEPARATOR_REGEX, expression)
+    delimiter_match = re.match(pattern, expression)
     delimiter = delimiter_match.group(1)
     input_numbers_start_index = delimiter_match.end()
 
