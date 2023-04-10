@@ -41,6 +41,7 @@ STOP HERE if you are a beginner. Continue if you could finish the steps (1-5.) w
 8. Numbers bigger than 1000 should be ignored, so adding 2 + 1001 = 2
 """
 import re
+from typing import Tuple
 
 
 SEPARATOR_REGEX = re.compile(
@@ -48,25 +49,18 @@ SEPARATOR_REGEX = re.compile(
 )
 
 
-def added(numbers: str) -> int:
+def added(expression: str) -> int:
     """
     """
     # we only accept str
-    if type(numbers) is not str:
-        raise TypeError('numbers paramteter should string')
+    if type(expression) is not str:
+        raise TypeError('expression paramteter should string')
 
     # empty str is always 0
-    if not numbers:
+    if not expression:
         return 0
 
-    # logic
-    # we extract separator lead by double forward slashes and followed by newline symbol
-    delimiter_match = re.match(SEPARATOR_REGEX, numbers)
-    delimiter = delimiter_match.group(1)
-    input_numbers_start_index = delimiter_match.end()
-
-    # we process the remaining part using provided separator
-    remaining_part = numbers[input_numbers_start_index:]
+    delimiter, remaining_part = extract_expression_params(expression)
     int_numbers = [] 
     for line in remaining_part.split('\n'):
         int_numbers.extend(
@@ -74,3 +68,14 @@ def added(numbers: str) -> int:
         )
 
     return sum(int_numbers)
+
+
+def extract_expression_params(expression: str) -> Tuple[str, int]:
+    # we extract separator lead by double forward slashes and followed by newline symbol
+    delimiter_match = re.match(SEPARATOR_REGEX, expression)
+    delimiter = delimiter_match.group(1)
+    input_numbers_start_index = delimiter_match.end()
+
+    # we process the remaining part using provided separator
+    remaining_part = expression[input_numbers_start_index:]
+    return delimiter, remaining_part

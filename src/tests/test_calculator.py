@@ -1,6 +1,6 @@
 # type: ignore
 import pytest
-from src.calculator import added
+from src.calculator import added, extract_expression_params
 
 
 def test_empty_input_returns_zero():
@@ -53,3 +53,32 @@ def test_added_accepts_only_strings(input_number):
 )
 def test_added_recognizes_different_delimiters(input, expected_result):
     assert added(input) == expected_result
+
+
+@pytest.mark.parametrize(
+    'input, expected_result',
+    [
+        (
+            '//,\n1,2', (
+                ',', '1,2'
+            )
+        ),
+        (
+            '//,\n1,2,3', (
+                ',', '1,2,3'
+            )
+        ),
+        (
+            '//|\n1|2', (
+                '|', '1|2'
+            )
+        ),
+        (
+            '//sep\n1sep2', (
+                'sep', '1sep2'
+            )
+        ),
+    ]
+)
+def test_extractor_recognizes_delimiter_and_input_numbers(input, expected_result):
+    assert extract_expression_params(input) == expected_result
