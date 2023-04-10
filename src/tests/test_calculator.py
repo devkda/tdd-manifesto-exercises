@@ -1,7 +1,7 @@
 # type: ignore
 import pytest
 from src.calculator import (
-    added, extract_expression_params, expression_is_valid
+    added, extract_expression_params, expression_is_not_valid
 )
 
 
@@ -102,15 +102,19 @@ def test_extractor_recognizes_delimiter_and_input_numbers(expression, expected_r
 @pytest.mark.parametrize(
     'numbers_with_delimiters, delimiter, expected_result',
     [
-        ('1sep2', 'sep', True),
-        ('1,2,3,5', ',', True),
-        ('1|2', '|', True),
-        ('1;2', ';', True),
-        ('1sep2', ',', False),
-        ('1,2,3,5', ';', False),
-        ('1|2', ',', False),
-        ('1;2', '|', False),
+        ('1sep2', 'sep', False),
+        ('1,2,3,5', ',', False),
+        ('1|2', '|', False),
+        ('1;2', ';', False),
+        ('1sep2', ',', True),
+        ('1,2,3,5', ';', True),
+        ('1|2', ',', True),
+        ('1;2', '|', True),
+        ('-100,200', ',', False),
+        ('-10,10\n10', ',', False),
     ]
 )
-def test_expression_validator_checks_consistency(numbers_with_delimiters, delimiter, expected_result):
-    assert expression_is_valid(numbers_with_delimiters, delimiter) == expected_result
+def test_expression_validator_checks_consistency(
+    numbers_with_delimiters, delimiter, expected_result
+):
+    assert expression_is_not_valid(numbers_with_delimiters, delimiter) == expected_result

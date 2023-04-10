@@ -61,16 +61,14 @@ def added(expression: str) -> int:
         return 0
 
     delimiter, remaining_part = extract_expression_params(expression)
-    int_numbers = [] 
-    # error = expression_is_valid(delimiter, remaining_part)
+    if expression_is_not_valid(remaining_part, delimiter):
+        raise ValueError('Expression has inconsistent separator')
 
+    int_numbers = [] 
     for line in remaining_part.split('\n'):
-        try:
-            int_numbers.extend(
-                [int(n) for n in line.split(delimiter)]
-            )
-        except ValueError as err:
-            raise err
+        int_numbers.extend(
+            [int(n) for n in line.split(delimiter)]
+        )
     return sum(int_numbers)
 
 
@@ -85,8 +83,11 @@ def extract_expression_params(expression: str) -> Tuple[str, str]:
     return delimiter, remaining_part
 
 
-def expression_is_valid(numbers_with_delimiters: str, delimiter: str) -> bool:
-    separated_numbers = numbers_with_delimiters.split(delimiter)
-    return all(
-        num.isdigit() for num in separated_numbers
-    )
+def expression_is_not_valid(numbers_with_delimiters: str, delimiter: str) -> bool:
+    for line in numbers_with_delimiters.split('\n'):
+        for num in line.split(delimiter):
+            try:
+                int(num)
+            except ValueError:
+                return True
+    return False
